@@ -34,7 +34,6 @@ function setup() {
     World.add(world, tower);
     cannon = new Cannon(180, 110, 130, 100, angle);
     cannonball = new CannonBall(cannon.x, cannon.y);
-    boat = new Boat(width - 80, height - 60, 170, 170, -80);
 }
 
 function draw() {
@@ -42,18 +41,22 @@ function draw() {
     Engine.update(engine);
     rect(ground.position.x, ground.position.y, 1200, 20);
     push();
+    translate(tower.position.x, tower.position.y);
+    rotate(tower.angle);
     imageMode(CENTER);
-    image(towerImg, tower.position.x, tower.position.y, 160, 310);
+    image(towerImg, 0, 0, 160, 310);
     pop();
-    showBoats()
+    showBoats();
+    for (var i = 0; i < balls.length; i++) {
+        showCannonballs(balls[i], i);
+        collisionWithBoat(i);
+    }
     cannon.display();
-    cannonball.display();
-
 }
 
 function keyReleased() {
     if (keyCode == RIGHT_ARROW) {
-        cannonball.shoot();
+        balls[balls.length - 1].shoot();
     }
 }
 
@@ -68,7 +71,7 @@ function showBoats() {
         }
         for (var i = 0; i < boats.length; i++) {
             if (boats[i]) {
-                Matter.Body.setVelocity(boat[i].body, {
+                Matter.Body.setVelocity(boats[i].body, {
                     x: -0.9,
                     y: 0
                 });
@@ -79,5 +82,34 @@ function showBoats() {
     else {
         var boat = new Boat(width, height - 60, 170, 170, -60);
         boats.push(boat);
+    }
+}
+
+
+function showCannonballs(ball, index) {
+    if (ball) {
+        ball.display();
+    }
+}
+
+function keyPressed() {
+    if (keyCode == RIGHT_ARROW) {
+        var cannonball = new CannonBall(cannon.x, cannon.y);
+        cannonball.trajectory = [];
+        Matter.Body.setAngle(cannonball.body, cannon.angle);
+        balls.push(cannonball);
+    }
+}
+
+function collisionWithBoat(index) {
+    for (var i = 0; i < boats.length; i++) {
+        if (balls[index] !== undefined && boats[i] != undefined) {
+            var collision = Matter.SAT.collides(balls[index].body, balls[i].body);
+            if (collision.collided) {
+                boats[i].remove;
+                Matter.World.remove(world, balls[index].body);
+                delete balls[index];
+            }
+        }
     }
 }
