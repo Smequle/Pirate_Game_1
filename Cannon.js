@@ -10,10 +10,10 @@ class Cannon {
   }
   display() {
     console.log(this.angle);
-    if (keyIsDown(DOWN_ARROW)) {
+    if (keyIsDown(DOWN_ARROW) && this.angle < 70) {
       this.angle += 1;
     }
-    if (keyIsDown(UP_ARROW)) {
+    if (keyIsDown(UP_ARROW) && this.angle > -30) {
       this.angle -= 1;
     }
     push();

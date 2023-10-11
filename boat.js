@@ -5,7 +5,7 @@ class Boat {
         //     friction: 1.0,
         //     density: 1.0
         // };
-        this.body = Bodies.rectangle(x, y, width, height,);
+        this.body = Bodies.rectangle(x, y, width, height);
         this.width = width;
         this.height = height;
         this.image = loadImage("./assets/boat.png");
@@ -21,5 +21,11 @@ class Boat {
         imageMode("CENTER");
         image(this.image, 0, this.boatPosition, this.width, this.height);
         pop();
+    }
+    remove(index) {
+        setTimeout(() => {
+            Matter.World.remove(world, boats[index].body);
+            delete boats[index];
+        }, 2000);
     }
 }

@@ -13,8 +13,10 @@ class CannonBall {
         var angle = this.body.angle;
         var pos = this.body.position;
         push();
+        translate(pos.x, pos.y);
+        rotate(angle);
         imageMode(CENTER);
-        image(this.image, pos.x, pos.y, this.r, this.r);
+        image(this.image, 0, 0, this.r, this.r);
         pop();
         if (this.body.velocity.x > 0 && pos.x > 10) {
             var position = [pos.x, pos.y];
@@ -34,5 +36,15 @@ class CannonBall {
             x: velocity.x * (180 / 3.14),
             y: velocity.y * (180 / 3.14)
         });
+    }
+    remove(index) {
+        Matter.Body.setVelocity(this.body, {
+            x: 0,
+            y: 0
+        });
+        setTimeout(() => {
+            Matter.World.remove(world, this.body);
+            delete balls[index];
+        }, 1000);
     }
 }
